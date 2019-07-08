@@ -68,8 +68,8 @@ function test(name, target, caller) {
 }
 
 test('bl          | read number', testReadNumber, bl());
-test('binary-data | read number', testReadNumber, new BufferList());
+test('biner | read number', testReadNumber, new BufferList());
 test('bl          | read + consume', testReadNumberConsume, bl());
-test('binary-data | read + consume', testReadNumberConsume, new BufferList());
+test('biner | read + consume', testReadNumberConsume, new BufferList());
 test('bl          | slice', testSlice, bl());
-test('binary-data | slice', testSlice, new BufferList());
+test('biner | slice', testSlice, new BufferList());

@@ -1,24 +1,13 @@
-# binary-data
-
-[![Build Status](https://travis-ci.org/reklatsmasters/binary-data.svg?branch=master)](https://travis-ci.org/reklatsmasters/binary-data)
-[![npm](https://img.shields.io/npm/v/binary-data.svg)](https://npmjs.org/package/binary-data)
-[![node](https://img.shields.io/node/v/binary-data.svg)](https://npmjs.org/package/binary-data)
-[![license](https://img.shields.io/npm/l/binary-data.svg)](https://npmjs.org/package/binary-data)
-[![downloads](https://img.shields.io/npm/dm/binary-data.svg)](https://npmjs.org/package/binary-data)
-[![Coverage Status](https://coveralls.io/repos/github/reklatsmasters/binary-data/badge.svg?branch=master)](https://coveralls.io/github/reklatsmasters/binary-data?branch=master)
+# biner
 
 Declarative binary data encoder / decoder. This module works almost like as [`binary`](https://www.npmjs.com/package/binary) or [`restructure`](https://www.npmjs.com/package/restructure) but provided modern and clean api. It inspired by [abstract-encoding](https://github.com/mafintosh/abstract-encoding) interface.
-
-### Support
-
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/purple_img.png)](https://www.buymeacoffee.com/reklatsmasters)
 
 ## Usage
 
 #### decode
 
 ```js
-const { decode, createDecode, types: { uint8, array, string } } = require('binary-data')
+const { decode, createDecode, types: { uint8, array, string } } = require('biner')
 
 // 1. Define your own schema as plain object
 const protocol = {
@@ -45,7 +34,7 @@ socket.pipe(istream).on('data', packet => {
 #### encode
 
 ```js
-const { encode, createEncode, types: { uint8, string } } = require('binary-data')
+const { encode, createEncode, types: { uint8, string } } = require('biner')
 
 const protocol = {
   type: uint8,

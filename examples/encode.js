@@ -14,4 +14,4 @@ const file = fs.createWriteStream('./encode.txt');
 output.pipe(file);
 
 output.write('hello, world!');
-output.write('binary-data works!');
+output.write('biner works!');
