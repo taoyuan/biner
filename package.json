@@ -4,10 +4,9 @@
   "description": "Declarative binary data encoder / decoder.",
   "main": "src/index.js",
   "scripts": {
-    "lint": "npx eslint .",
     "cover": "npx jest --coverage",
-    "test": "npm run lint && npx jest",
-    "test-ci": "npm run lint && npm run cover"
+    "test": "npx jest",
+    "test-ci": "npm run cover"
   },
   "repository": {
     "type": "git",
@@ -39,13 +38,14 @@
     "is-plain-object": "^3.0.0"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.15",
     "@types/node": "^12.6",
     "binary": "^0.3.0",
     "bl": "^3.0.0",
-    "eslint": "^6.0.1",
     "jest": "^24.8.0",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.3",
     "typescript": "^3.5"
   },
@@ -56,7 +56,7 @@
       "<rootDir>/src/node_modules"
     ],
     "testMatch": [
-      "**/test/**/*.js"
+      "**/test/**/*.test.ts"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/"
@@ -78,44 +78,5 @@
         "types"
       ]
     }
-  },
-  "eslintConfig": {
-    "extends": "@nodertc",
-    "overrides": [
-      {
-        "files": [
-          "test/**/*.js"
-        ],
-        "env": {
-          "jest": true
-        },
-        "settings": {
-          "import/resolver": {
-            "node": {
-              "moduleDirectory": [
-                "node_modules",
-                "src",
-                "src/node_modules"
-              ]
-            }
-          }
-        },
-        "rules": {
-          "require-jsdoc": "off"
-        }
-      },
-      {
-        "files": [
-          "benchmark/*.js",
-          "examples/*.js"
-        ],
-        "rules": {
-          "no-console": "off",
-          "require-jsdoc": "off",
-          "no-plusplus": "off",
-          "no-param-reassign": "off"
-        }
-      }
-    ]
   }
 }
