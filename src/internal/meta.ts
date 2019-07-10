@@ -1,24 +1,17 @@
-'use strict';
-
-const symbols = require('internal/symbols');
+import * as symbols from './symbols';
 
 /**
  * Store extended info between encode/decode calls.
  */
-module.exports = class Metadata {
-  /**
-   * @class Metadata
-   */
-  constructor() {
-    // The number of bytes are processed.
-    this[symbols.bytes] = 0;
+export class Metadata {
+  // Root node.
+  node: any;
 
-    // Root node.
-    this.node = undefined;
+  // Current node.
+  current: any;
 
-    // Current node.
-    this.current = undefined;
-  }
+  // The number of bytes are processed.
+  [symbols.bytes]: number = 0;
 
   /**
    * The number of bytes are processed.
@@ -54,4 +47,4 @@ module.exports = class Metadata {
       metadata.current = undefined;
     }
   }
-};
+}

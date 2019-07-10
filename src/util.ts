@@ -2,55 +2,49 @@
 
 const isPlainObject = require('is-plain-object');
 
-module.exports = {
-  isType,
-  isUserType: isPlainObject,
-  isFunction,
-  isDecodeType,
-  isEncodeType,
-};
+export const isUserType: (o: any) => boolean = isPlainObject;
 
 /**
  * Check if argument is data type.
  * @param {*} type
- * @returns {bool}
+ * @returns {boolean}
  */
-function isType(type) {
+export function isType(type) {
   return isObject(type) && isFunction(type.encode) && isFunction(type.decode);
 }
 
 /**
  * Check if argument is function.
  * @param {*} value
- * @returns {bool}
- */
-function isFunction(value) {
+ * @returns {boolean}
+ export */
+export function isFunction(value): value is Function {
   return typeof value === 'function';
 }
 
 /**
  * Check if argument is object.
  * @param {*} value
- * @returns {bool}
+ * @returns {boolean}
  */
-function isObject(value) {
+export function isObject(value) {
   return typeof value === 'object' && value !== null;
 }
 
 /**
  * Check if argument is data type and able to decode data.
  * @param {*} type
- * @returns {bool}
+ * @returns {boolean}
  */
-function isDecodeType(type) {
+export function isDecodeType(type) {
   return isObject(type) && isFunction(type.decode);
 }
 
 /**
  * Check if argument is data type and able to encode data.
  * @param {*} type
- * @returns {bool}
+ * @returns {boolean}
  */
-function isEncodeType(type) {
+export function isEncodeType(type) {
   return isObject(type) && isFunction(type.encode);
 }

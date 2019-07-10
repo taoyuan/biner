@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * Represent an unexpected end of decode stream.
  */
-module.exports = class NotEnoughDataError extends Error {
+export class NotEnoughDataError extends Error {
   /**
    * @class NotEnoughDataError
    * @param {number} expected The number of expected bytes.
@@ -15,4 +13,4 @@ module.exports = class NotEnoughDataError extends Error {
     super(message);
     this.name = 'NotEnoughDataError';
   }
-};
+}

@@ -1,9 +1,9 @@
 'use strict';
 
-const { isType } = require('lib/util');
-const NotEnoughDataError = require('lib/not-enough-data-error');
-
-module.exports = string;
+import {BinaryStream} from "../binary-stream";
+import {isType} from '../util';
+import {NotEnoughDataError} from '../not-enough-data-error';
+import {Codec} from "../codec";
 
 /**
  * Type for strings.
@@ -11,7 +11,7 @@ module.exports = string;
  * @param {string} encoding
  * @returns {Object}
  */
-function string(length, encoding = 'ascii') {
+export function string(length, encoding = 'ascii'): Codec<string> {
   if (!Buffer.isEncoding(encoding)) {
     throw new Error('Argument #2 should be an encoding name.');
   }
@@ -79,7 +79,7 @@ function encodeNullString(encoding) {
     wstream.writeBuffer(buf);
     wstream.writeInt8(0);
 
-    encode.bytes = buf.length + 1;
+    return buf.length + 1;
   };
 }
 
@@ -89,7 +89,7 @@ function encodeNullString(encoding) {
  * @returns {Function}
  */
 function decodeNullString(encoding) {
-  return function decode(rstream) {
+  return function decode(rstream: BinaryStream): [string, number] {
     const bytes = rstream.indexOf(0);
 
     if (bytes === -1) {
@@ -97,10 +97,10 @@ function decodeNullString(encoding) {
     }
 
     const bytesWithNull = bytes + 1;
-    const buf = rstream.readBuffer(bytesWithNull);
-    decode.bytes = bytesWithNull;
+    const buf: Buffer = rstream.readBuffer(bytesWithNull);
+    // decode.bytes = bytesWithNull;
 
-    return buf.toString(encoding, 0, bytes);
+    return [buf.toString(encoding, 0, bytes), bytesWithNull];
   };
 }
 
@@ -121,7 +121,7 @@ function encodeFixedString(size, encoding) {
     const buf = Buffer.from(value, encoding);
 
     wstream.writeBuffer(buf);
-    encode.bytes = buf.length;
+    return buf.length;
   };
 }
 
@@ -132,11 +132,11 @@ function encodeFixedString(size, encoding) {
  * @returns {Function}
  */
 function decodeFixedString(size, encoding) {
-  return function decode(rstream) {
-    const buf = rstream.readBuffer(size);
-    decode.bytes = size;
+  return function decode(rstream): [string, number] {
+    const buf: Buffer = rstream.readBuffer(size);
+    // decode.bytes = size;
 
-    return buf.toString(encoding);
+    return [buf.toString(encoding), size];
   };
 }
 
@@ -153,12 +153,13 @@ function encodeSizePrefixedString(type, encoding) {
     const context = this;
 
     type.encode.call(context, Buffer.byteLength(value, encoding), wstream);
-    encode.bytes = type.encode.bytes;
+    let bytes = type.encode.bytes;
 
     const buf = Buffer.from(value, encoding);
 
     wstream.writeBuffer(buf);
-    encode.bytes += buf.length;
+    bytes += buf.length;
+    return bytes;
   };
 }
 
@@ -169,17 +170,17 @@ function encodeSizePrefixedString(type, encoding) {
  * @returns {number}
  */
 function decodeSizePrefixedString(type, encoding) {
-  return function decode(rstream) {
+  return function decode(rstream): [string, number] {
     const size = type.decode.call(this, rstream);
 
     if (typeof size !== 'number') {
       throw new TypeError('Size of a string should be a number.');
     }
 
-    const buf = rstream.readBuffer(size);
-    decode.bytes = type.decode.bytes + buf.length;
+    const buf: Buffer = rstream.readBuffer(size);
+    let bytes = type.decode.bytes + buf.length;
 
-    return buf.toString(encoding);
+    return [buf.toString(encoding), bytes];
   };
 }
 
@@ -205,7 +206,7 @@ function encodingLengthSizePrefixedString(type, encoding) {
  */
 function encodeCallback(callback, encoding) {
   return function encode(value, wstream) {
-    encode.bytes = 0;
+    let bytes = 0;
 
     const context = this;
 
@@ -216,7 +217,8 @@ function encodeCallback(callback, encoding) {
     checkLength(expectedLength, buf.length);
 
     wstream.writeBuffer(buf);
-    encode.bytes += buf.length;
+    bytes += buf.length;
+    return bytes;
   };
 }
 
@@ -227,14 +229,14 @@ function encodeCallback(callback, encoding) {
  * @returns {number}
  */
 function decodeCallback(callback, encoding) {
-  return function decode(rstream) {
+  return function decode(rstream): [string, number] {
     const size = callback(this);
     checkLengthType(size);
 
-    const buf = rstream.readBuffer(size);
-    decode.bytes = size;
+    const buf: Buffer = rstream.readBuffer(size);
+    // decode.bytes = size;
 
-    return buf.toString(encoding);
+    return [buf.toString(encoding), size];
   };
 }
 

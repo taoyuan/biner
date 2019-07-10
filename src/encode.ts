@@ -1,14 +1,11 @@
 'use strict';
 
-const { isUserType, isEncodeType, isType } = require('lib/util');
-const symbols = require('internal/symbols');
-const Metadata = require('internal/meta');
-const BinaryStream = require('lib/binary-stream');
+import {isUserType, isEncodeType, isType} from './util';
 
-module.exports = {
-  encode,
-  encodeCommon,
-};
+import * as symbols from './internal/symbols';
+import {Metadata} from './internal/meta';
+import {BinaryStream} from './binary-stream';
+
 
 /**
  * @param {any} obj
@@ -16,7 +13,7 @@ module.exports = {
  * @param {BinaryStream} [target]
  * @returns {BinaryStream}
  */
-function encode(obj, type, target) {
+export function encode(obj, type, target: BinaryStream): [BinaryStream, number] {
   const meta = new Metadata();
 
   // Check for legacy interface.
@@ -32,10 +29,11 @@ function encode(obj, type, target) {
 
   encodeCommon(obj, target, type, meta);
 
-  encode.bytes = meta.bytes;
+  // TODO check bytes is necessary
+  // encode.bytes = meta.bytes;
   Metadata.clean(meta);
 
-  return target;
+  return [target, meta.bytes];
 }
 
 /**
@@ -44,7 +42,7 @@ function encode(obj, type, target) {
  * @param {any} typeOrSchema
  * @param {Metadata} context
  */
-function encodeCommon(object, wstream, typeOrSchema, context) {
+export function encodeCommon(object, wstream, typeOrSchema, context) {
   if (isType(typeOrSchema)) {
     typeOrSchema.encode.call(context, object, wstream);
     context[symbols.bytes] += typeOrSchema.encode.bytes;

@@ -1,46 +1,35 @@
-'use strict';
-
 /**
  * A Leaf in a linked list.
  */
 class Chunk {
-  /**
-   * @class Chunk
-   */
-  constructor() {
-    /** @type {Chunk} */
-    this.next = null;
-    /** @type {Buffer} */
-    this.buffer = null;
+  next?: Chunk;
+  buffer: Buffer;
+
+  constructor(buffer: Buffer, next?: Chunk) {
+    this.buffer = buffer;
+    this.next = next;
   }
 }
 
 /**
  * Linked list for buffers.
  */
-module.exports = class LinkedList {
-  /**
-   * @class LinkedList
-   */
-  constructor() {
-    /** @type {Chunk} */
-    this.head = null;
-    /** @type {Chunk} */
-    this.tail = null;
+export class LinkedList {
 
-    this.length = 0;
-    this.count = 0;
-  }
+  head?: Chunk;
+  tail?: Chunk;
+  length: number = 0;
+  count: number = 0;
 
   /**
    * Add a buffer to the end of the list.
    * @param {Buffer} buf
    */
   push(buf) {
-    const entry = new Chunk();
-    entry.buffer = buf;
+    const entry = new Chunk(buf);
 
-    if (this.length > 0) {
+    // if (this.length > 0) {
+    if (this.tail) {
       this.tail.next = entry;
     } else {
       this.head = entry;
@@ -56,9 +45,7 @@ module.exports = class LinkedList {
    * @param {Buffer} buf
    */
   unshift(buf) {
-    const entry = new Chunk();
-    entry.buffer = buf;
-    entry.next = this.head;
+    const entry = new Chunk(buf, this.head);
 
     if (this.isEmpty()) {
       this.tail = entry;
@@ -71,25 +58,26 @@ module.exports = class LinkedList {
 
   /**
    * Remove and return first element's buffer.
-   * @returns {Buffer|null}
    */
-  shift() {
+  shift(): Buffer | undefined {
     if (this.isEmpty()) {
-      return null;
+      return;
     }
 
-    const ret = this.head.buffer;
+    const ret = this.head && this.head.buffer;
 
     if (this.head === this.tail) {
-      this.head = null;
-      this.tail = null;
-    } else {
+      this.head = undefined;
+      this.tail = undefined;
+    } else if (this.head) {
       this.head = this.head.next;
     }
 
-    this.length -= ret.length;
-    this.length = Math.max(this.length, 0);
-    this.count -= 1;
+    if (ret) {
+      this.length -= ret.length;
+      this.length = Math.max(this.length, 0);
+      this.count -= 1;
+    }
 
     return ret;
   }
@@ -100,10 +88,10 @@ module.exports = class LinkedList {
    */
   get first() {
     if (this.isEmpty()) {
-      return null;
+      return;
     }
 
-    return this.head.buffer;
+    return this.head && this.head.buffer;
   }
 
   /**
@@ -115,12 +103,12 @@ module.exports = class LinkedList {
       return null;
     }
 
-    return this.tail.buffer;
+    return this.tail && this.tail.buffer;
   }
 
   /**
    * Check if a list is empty.
-   * @returns {bool}
+   * @returns {boolean}
    */
   isEmpty() {
     return this.length === 0;
@@ -130,8 +118,8 @@ module.exports = class LinkedList {
    * Remove all elements from a list.
    */
   clear() {
-    this.head = null;
-    this.tail = null;
+    this.head = undefined;
+    this.tail = undefined;
     this.length = 0;
     this.count = 0;
   }
@@ -177,7 +165,7 @@ module.exports = class LinkedList {
     }
 
     // Find tail of slice
-    if (leaf.buffer.length < offsetEnd) {
+    if (leaf && (leaf.buffer.length < offsetEnd)) {
       while (leaf) {
         if (leaf.buffer.length === offsetEnd) {
           list.push(leaf.buffer);

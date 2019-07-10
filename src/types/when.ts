@@ -1,13 +1,12 @@
 'use strict';
 
-const { isType, isFunction, isUserType } = require('lib/util');
-const symbols = require('internal/symbols');
-const { decodeCommon } = require('lib/decode');
-const { encodeCommon } = require('lib/encode');
-const { encodingLengthCommon } = require('lib/encoding-length');
-const Metadata = require('internal/meta');
-
-module.exports = when;
+import {isType, isFunction, isUserType} from '../util';
+import * as symbols from '../internal/symbols';
+import {decodeCommon} from '../decode';
+import {encodeCommon} from '../encode';
+import {encodingLengthCommon} from '../encoding-length';
+import {Metadata} from '../internal/meta';
+import {Codec} from "../codec";
 
 /**
  * Type for conditions.
@@ -15,7 +14,7 @@ module.exports = when;
  * @param {Object} type Any builtin type or schema.
  * @returns {Object}
  */
-function when(condition, type) {
+export function when(condition, type): Codec<any> {
   if (!isType(type) && !isUserType(type)) {
     throw new TypeError('Argument #2 should be a valid type.');
   }
@@ -36,7 +35,7 @@ function when(condition, type) {
    */
   function encode(value, wstream) {
     const context = Metadata.clone(this);
-    encode.bytes = 0;
+    let bytes: number = 0;
 
     const status = isFunction(condition)
       ? Boolean(condition(context))
@@ -46,13 +45,14 @@ function when(condition, type) {
 
     if (!status) {
       Metadata.clean(context);
-      return;
+      return bytes;
     }
 
     encodeCommon(value, wstream, type, context);
-    encode.bytes = context.bytes;
+    bytes = context.bytes;
 
     Metadata.clean(context);
+    return bytes;
   }
 
   /**
@@ -60,9 +60,9 @@ function when(condition, type) {
    * @param {DecodeStream} rstream
    * @returns {any}
    */
-  function decode(rstream) {
+  function decode(rstream): [any, number] {
     const context = Metadata.clone(this);
-    decode.bytes = 0;
+    let bytes = 0;
 
     const status = isFunction(condition)
       ? Boolean(condition(context))
@@ -72,15 +72,15 @@ function when(condition, type) {
 
     if (!status) {
       Metadata.clean(context);
-      return;
+      return [undefined, bytes];
     }
 
     const value = decodeCommon(rstream, type, context);
 
-    decode.bytes = context.bytes;
+    bytes = context.bytes;
     Metadata.clean(context);
 
-    return value; // eslint-disable-line consistent-return
+    return [value, bytes]; // eslint-disable-line consistent-return
   }
 
   /**

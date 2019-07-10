@@ -36,15 +36,18 @@
   },
   "dependencies": {
     "generate-function": "^2.3.1",
-    "is-plain-object": "^2.0.3"
+    "is-plain-object": "^3.0.0"
   },
   "devDependencies": {
-    "@nodertc/eslint-config": "0.2.1",
+    "@types/node": "^12.6",
     "binary": "^0.3.0",
-    "bl": "^2.1.2",
-    "eslint": "^5.6.1",
-    "jest": "^23.6.0",
-    "prettier": "^1.14.3"
+    "bl": "^3.0.0",
+    "eslint": "^6.0.1",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.3",
+    "typescript": "^3.5"
   },
   "jest": {
     "modulePaths": [

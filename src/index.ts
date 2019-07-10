@@ -1,19 +1,19 @@
 'use strict';
 
-const BinaryStream = require('lib/binary-stream');
-const array = require('types/array');
-const buffer = require('types/buffer');
-const bool = require('types/bool');
-const reserved = require('types/reserved');
-const string = require('types/string');
-const numbers = require('types/numbers');
-const when = require('types/when');
-const select = require('types/select');
-const { encode } = require('lib/encode');
-const { decode } = require('lib/decode');
-const { encodingLength } = require('lib/encoding-length');
-const Transaction = require('lib/transaction');
-const NotEnoughDataError = require('lib/not-enough-data-error');
+import {BinaryStream}  from './binary-stream';
+import {array}  from './types/array';
+import {buffer}  from './types/buffer';
+import {bool}  from './types/bool';
+import {reserved}  from './types/reserved';
+import {string}  from './types/string';
+import {numbers}  from './types/numbers';
+import {when}  from './types/when';
+import {select}  from './types/select';
+import { encode }  from './encode';
+import { decode }  from './decode';
+import { encodingLength }  from './encoding-length';
+import {Transaction}  from './transaction';
+import {NotEnoughDataError}  from './not-enough-data-error';
 
 const types = {
   array,
@@ -36,7 +36,7 @@ const kschema = Symbol('schema');
  * @param {Object} [schema]
  * @returns {EncodeStream}
  */
-function createEncodeStream(schema) {
+export function createEncodeStream(schema) {
   const stream = new BinaryStream({
     readableObjectMode: false,
     writableObjectMode: true,
@@ -52,7 +52,7 @@ function createEncodeStream(schema) {
  * @param {Buffer|Object} [bufOrSchema]
  * @returns {DecodeStream}
  */
-function createDecodeStream(bufOrSchema) {
+export function createDecodeStream(bufOrSchema) {
   let schema = null;
   const isBuffer = Buffer.isBuffer(bufOrSchema);
 
@@ -122,17 +122,14 @@ function transformDecode(chunk, encoding, cb) {
   }
 }
 
-module.exports = {
+export const createEncode = createEncodeStream;
+export const createDecode = createDecodeStream;
+
+export {
   /* Main api */
-  createEncodeStream,
-  createDecodeStream,
   encode,
   decode,
   encodingLength,
-
-  /* aliases */
-  createEncode: createEncodeStream,
-  createDecode: createDecodeStream,
 
   /* Data types */
   types,
@@ -140,4 +137,4 @@ module.exports = {
   /* Re-export utils */
   BinaryStream,
   NotEnoughDataError,
-};
+}

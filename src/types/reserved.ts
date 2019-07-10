@@ -1,13 +1,13 @@
 'use strict';
 
-const { decodeCommon } = require('lib/decode');
-const { encodeCommon } = require('lib/encode');
-const { encodingLengthCommon } = require('lib/encoding-length');
-const { isType, isFunction } = require('lib/util');
-const symbols = require('internal/symbols');
-const Metadata = require('internal/meta');
-
-module.exports = reserved;
+import {decodeCommon} from '../decode';
+import {encodeCommon} from '../encode';
+import {encodingLengthCommon} from '../encoding-length';
+import {isType, isFunction} from '../util';
+import * as symbols from '../internal/symbols';
+import {Metadata} from '../internal/meta';
+import {Codec} from "../codec";
+import {BinaryStream} from "../binary-stream";
 
 /**
  * Type for reserved data.
@@ -15,12 +15,12 @@ module.exports = reserved;
  * @param {number} size The number of reserved items.
  * @returns {Object}
  */
-function reserved(type, size = 1) {
+export function reserved(type, size: number | ((context) => number) = 1): Codec<any> {
   if (!isType(type)) {
     throw new TypeError('Invalid data type.');
   }
 
-  if (!Number.isInteger(size) && !isFunction(size)) {
+  if (!Number.isInteger(<number>size) && !isFunction(size)) {
     throw new TypeError('Argument #2 should be a valid integer or function.');
   }
 
@@ -52,24 +52,25 @@ function reserved(type, size = 1) {
    * Silently decode items.
    * @param {DecodeStream} rstream
    */
-  function decode(rstream) {
+  function decode(rstream: BinaryStream): [any, number] {
     // eslint-disable-next-line no-invalid-this
     const context = Metadata.clone(this);
-    decode.bytes = 0;
+    let bytes = 0;
 
     const count = isFunction(size) ? size(context) : size;
 
     if (count === 0) {
       Metadata.clean(context);
-      return;
+      return [undefined, bytes];
     }
 
     for (let i = count; i > 0; i -= 1) {
       decodeCommon(rstream, type, context);
     }
 
-    decode.bytes = context.bytes;
+    bytes = context.bytes;
     Metadata.clean(context);
+    return [undefined, bytes];
   }
 
   /**
@@ -78,8 +79,8 @@ function reserved(type, size = 1) {
    * @param {any} value
    * @param {EncodeStream} wstream
    */
-  function encode(value, wstream) {
-    encode.bytes = 0;
+  function encode(value: any, wstream: BinaryStream) {
+    let bytes = 0;
 
     // eslint-disable-next-line no-invalid-this
     const context = Metadata.clone(this);
@@ -88,14 +89,15 @@ function reserved(type, size = 1) {
 
     if (count === 0) {
       Metadata.clean(context);
-      return;
+      return bytes;
     }
 
     for (let i = count; i > 0; i -= 1) {
       encodeCommon(0, wstream, type, context);
     }
 
-    encode.bytes = context.bytes;
+    bytes = context.bytes;
     Metadata.clean(context);
+    return bytes;
   }
 }

@@ -1,13 +1,9 @@
 'use strict';
 
-const { isUserType, isType } = require('lib/util');
-const Metadata = require('internal/meta');
-const symbols = require('internal/symbols');
+import {isUserType, isType} from './util';
+import * as symbols from './internal/symbols';
+import {Metadata} from './internal/meta';
 
-module.exports = {
-  encodingLength,
-  encodingLengthCommon,
-};
 
 /**
  * Get the number of bytes to encode `obj` using `schema`.
@@ -15,7 +11,7 @@ module.exports = {
  * @param {Object} schema
  * @returns {number}
  */
-function encodingLength(obj, schema) {
+export function encodingLength(obj, schema) {
   const context = new Metadata();
 
   encodingLengthCommon(obj, schema, context);
@@ -29,7 +25,7 @@ function encodingLength(obj, schema) {
  * @param {Object} typeOrSchema
  * @param {Metadata} context
  */
-function encodingLengthCommon(item, typeOrSchema, context) {
+export function encodingLengthCommon(item, typeOrSchema, context) {
   if (isType(typeOrSchema)) {
     context[symbols.bytes] += typeOrSchema.encodingLength.call(context, item);
   } else {

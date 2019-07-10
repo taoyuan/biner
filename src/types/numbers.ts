@@ -1,8 +1,8 @@
 'use strict';
 
-const createFunction = require('generate-function');
+import {BinaryStream} from "../binary-stream";
 
-module.exports = {
+export const numbers = {
   doublebe: createFastStub(8, 'writeDoubleBE', 'readDoubleBE'),
   doublele: createFastStub(8, 'writeDoubleLE', 'readDoubleLE'),
   floatbe: createFastStub(4, 'writeFloatBE', 'readFloatBE'),
@@ -40,27 +40,20 @@ module.exports = {
  * @private
  */
 function createFastStub(size, write, read) {
-  const genread = createFunction();
-  const genwrite = createFunction();
+  function encode(value, wstream: BinaryStream) {
+    wstream[write](value, 0);
+    return size;
+  }
 
-  genread(`
-    function decode_${read}(rstream) {
-      decode_${read}.bytes = ${genread.formats.d(size)};
-      return rstream.${read}()
-    }
-  `);
-
-  genwrite(`
-    function encode_${write}(value, wstream) {
-      wstream.${write}(value);
-      encode_${write}.bytes = ${genread.formats.d(size)};
-    }
-  `);
+  function decode(rstream: BinaryStream) {
+    const ret = rstream[read](0);
+    return [ret, size];
+  }
 
   return {
     encodingLength: () => size,
-    encode: genwrite.toFunction(),
-    decode: genread.toFunction(),
+    encode,
+    decode,
   };
 }
 
@@ -73,26 +66,19 @@ function createFastStub(size, write, read) {
  * @private
  */
 function createFastStubGeneric(size, write, read) {
-  const genread = createFunction();
-  const genwrite = createFunction();
+  function encode(value, wstream: BinaryStream) {
+    wstream[write](value, 0, size);
+    return size;
+  }
 
-  genread(`
-    function decode_${read}(rstream) {
-      decode_${read}.bytes = ${genread.formats.d(size)};
-      return rstream.${read}(${genread.formats.d(size)})
-    }
-  `);
-
-  genwrite(`
-    function encode_${write}(value, wstream) {
-      wstream.${write}(value, ${genread.formats.d(size)});
-      encode_${write}.bytes = ${genread.formats.d(size)};
-    }
-  `);
+  function decode(rstream: BinaryStream) {
+    const ret = rstream[read](0, size);
+    return [ret, size];
+  }
 
   return {
     encodingLength: () => size,
-    encode: genwrite.toFunction(),
-    decode: genread.toFunction(),
+    encode,
+    decode,
   };
 }

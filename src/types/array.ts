@@ -1,12 +1,12 @@
 'use strict';
 
-const { decodeCommon } = require('lib/decode');
-const { encodeCommon } = require('lib/encode');
-const { encodingLengthCommon } = require('lib/encoding-length');
-const { isType, isUserType, isFunction } = require('lib/util');
-const Metadata = require('internal/meta');
+import {decodeCommon} from '../decode';
+import {encodeCommon} from '../encode';
+import {encodingLengthCommon} from '../encoding-length';
+import {isType, isUserType, isFunction} from '../util';
+import {Metadata} from '../internal/meta';
+import {Codec} from "../codec";
 
-module.exports = array;
 
 /**
  * Array type.
@@ -15,7 +15,7 @@ module.exports = array;
  * @param {string} lengthType Method of calculate the length of array.
  * @returns {Object}
  */
-function array(type, length, lengthType = 'count') {
+export function array(type, length, lengthType = 'count'): Codec<any[]> {
   if (!isType(type) && !isUserType(type)) {
     throw new TypeError('Argument #1 should be a valid type.');
   }
@@ -46,7 +46,8 @@ function array(type, length, lengthType = 'count') {
     // eslint-disable-next-line no-invalid-this
     const context = Metadata.clone(this);
 
-    encode.bytes = 0;
+    let bytes = 0;
+    // encode.bytes = 0;
     let expectedSize = 0;
 
     if (istype) {
@@ -80,15 +81,16 @@ function array(type, length, lengthType = 'count') {
 
     if (istype) {
       length.encode.call(context, expectedSize, wstream);
-      encode.bytes += length.encode.bytes;
+      bytes += length.encode.bytes;
     }
 
     items.forEach(item => {
       encodeCommon(item, wstream, type, context);
     });
 
-    encode.bytes += context.bytes;
+    bytes += context.bytes;
     Metadata.clean(context);
+    return bytes;
   }
 
   /**
@@ -96,9 +98,10 @@ function array(type, length, lengthType = 'count') {
    * @param {DecodeStream} rstream
    * @returns {any[]}
    */
-  function decode(rstream) {
+  function decode(rstream): [any[], number] {
     let expectedSize = 0;
-    decode.bytes = 0;
+    let bytes = 0;
+    // decode.bytes = 0;
 
     // eslint-disable-next-line no-invalid-this
     const context = Metadata.clone(this);
@@ -107,7 +110,7 @@ function array(type, length, lengthType = 'count') {
       expectedSize = length;
     } else if (istype) {
       expectedSize = length.decode.call(context, rstream);
-      decode.bytes += length.decode.bytes;
+      bytes += length.decode.bytes;
     } else if (isfunc) {
       expectedSize = length(context);
     }
@@ -122,9 +125,9 @@ function array(type, length, lengthType = 'count') {
       values = decodeCount(type, expectedSize, rstream, context);
     }
 
-    decode.bytes += context.bytes;
+    bytes += context.bytes;
     Metadata.clean(context);
-    return values;
+    return [values, bytes];
   }
 
   /**
@@ -209,12 +212,13 @@ function checkArraySize(requiredSize, havingSize) {
  * @private
  */
 function decodeBytes(type, lengthBytes, rstream, context) {
-  const items = [];
+  const items: any[] = [];
   const before = context.bytes;
   let bytes = 0;
 
   while (bytes < lengthBytes) {
-    items.push(decodeCommon(rstream, type, context));
+    const [result] = decodeCommon(rstream, type, context);
+    items.push(result);
     bytes = context.bytes - before;
   }
 

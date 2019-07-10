@@ -1,14 +1,10 @@
 'use strict';
 
-const { isType, isUserType, isDecodeType } = require('lib/util');
-const BinaryStream = require('lib/binary-stream');
-const symbols = require('internal/symbols');
-const Metadata = require('internal/meta');
-
-module.exports = {
-  decode,
-  decodeCommon,
-};
+import {isType, isUserType, isDecodeType} from './util';
+import {BinaryStream} from './binary-stream';
+import * as symbols from './internal/symbols';
+import {Metadata} from './internal/meta';
+import {BufioReader} from "./bufio";
 
 /**
  * Decode any data from provided stream using schema.
@@ -16,21 +12,22 @@ module.exports = {
  * @param {Object} typeOrSchema Builtin data type or schema.
  * @returns {*}
  */
-function decode(rstream, typeOrSchema) {
+export function decode(rstream: BufioReader | Buffer, typeOrSchema): [any, number] {
   let decodeStream = rstream;
 
   if (Buffer.isBuffer(rstream)) {
-    decodeStream = new BinaryStream();
-    decodeStream.append(rstream);
+    const bs = new BinaryStream();
+    bs.append(rstream);
+    decodeStream = bs;
   }
 
   const meta = new Metadata();
   const value = decodeCommon(decodeStream, typeOrSchema, meta);
 
-  decode.bytes = meta.bytes;
+  // decode.bytes = meta.bytes;
   Metadata.clean(meta);
 
-  return value;
+  return [value, meta.bytes];
 }
 
 /**
@@ -40,7 +37,7 @@ function decode(rstream, typeOrSchema) {
  * @param {Metadata} meta
  * @returns {*}
  */
-function decodeCommon(rstream, typeOrSchema, meta) {
+export function decodeCommon(rstream: BufioReader, typeOrSchema, meta) {
   if (isType(typeOrSchema)) {
     const value = typeOrSchema.decode.call(meta, rstream);
     meta[symbols.bytes] += typeOrSchema.decode.bytes;

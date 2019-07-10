@@ -1,10 +1,9 @@
 'use strict';
 
-const symbols = require('internal/symbols');
-const { decodeCommon } = require('lib/decode');
-const Metadata = require('internal/meta');
-
-module.exports = select;
+import * as symbols from '../internal/symbols';
+import {decodeCommon} from '../decode';
+import {Metadata} from '../internal/meta';
+import {Codec} from "../codec";
 
 /**
  * Type for multiple conditions.
@@ -12,14 +11,15 @@ module.exports = select;
  * @param {...any} whenTypes The `when` type.
  * @returns {Object}
  */
-function select(...whenTypes) {
+export function select(...whenTypes): Codec<any> {
   if (whenTypes.length === 0) {
     throw new TypeError('You should set at least one condition type.');
   }
 
-  const result = {
+  const result: Codec<any> = {
+    encodingLength: (() => 0),
     decode,
-    encode: () => {},
+    encode: (() => 0),
     [symbols.skip]: true,
   };
 
@@ -29,10 +29,9 @@ function select(...whenTypes) {
   /**
    * Decode data using a first success contifion.
    * @param {DecodeStream} rstream
-   * @returns {any}
    */
-  function decode(rstream) {
-    decode.bytes = 0;
+  function decode(rstream): [any, number] {
+    let bytes = 0;
     const context = Metadata.clone(this); // eslint-disable-line no-invalid-this
 
     for (const when of whenTypes) {
@@ -43,14 +42,16 @@ function select(...whenTypes) {
         continue; // eslint-disable-line no-continue
       }
 
-      decode.bytes = context.bytes;
+      bytes = context.bytes;
       Metadata.clean(context);
 
       result[symbols.skip] = false;
-      return probalyValue;
+      return [probalyValue, bytes];
     }
 
     result[symbols.skip] = true;
+    return [undefined, bytes];
   }
+
   /* eslint-enable consistent-return */
 }

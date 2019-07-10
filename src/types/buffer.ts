@@ -1,17 +1,16 @@
 'use strict';
 
-const { isType, isFunction } = require('lib/util');
-const NotEnoughDataError = require('lib/not-enough-data-error');
-const BinaryStream = require('lib/binary-stream');
-
-module.exports = buffer;
+import {isType, isFunction} from '../util';
+import {NotEnoughDataError} from '../not-enough-data-error';
+import {BinaryStream} from '../binary-stream';
+import {Codec} from "../codec";
 
 /**
  * Buffer type.
  * @param {number|Object} length The number of bytes or type for size-prefixed buffers.
  * @returns {Object}
  */
-function buffer(length) {
+export function buffer(length): Codec<Buffer> {
   const isnum = typeof length === 'number';
   const istype = isType(length);
   const isfunc = isFunction(length);
@@ -32,9 +31,9 @@ function buffer(length) {
    * @param {Buffer} buf
    * @param {EncodeStream} wstream
    */
-  function encode(buf, wstream) {
+  function encode(buf: Buffer | BinaryStream, wstream: BinaryStream) {
     checkBuffer(buf);
-    encode.bytes = 0;
+    let bytes = 0;
 
     // eslint-disable-next-line no-invalid-this
     const context = this;
@@ -45,7 +44,7 @@ function buffer(length) {
 
     if (istype) {
       length.encode.call(context, buf.length, wstream);
-      encode.bytes += length.encode.bytes;
+      bytes += length.encode.bytes;
     }
 
     if (isfunc) {
@@ -56,12 +55,13 @@ function buffer(length) {
     }
 
     wstream.writeBuffer(Buffer.isBuffer(buf) ? buf : buf.buffer);
-    encode.bytes += buf.length;
+    bytes += buf.length;
 
     if (isNull) {
       wstream.writeUInt8(0);
-      encode.bytes += 1;
+      bytes += 1;
     }
+    return bytes;
   }
 
   /**
@@ -69,9 +69,9 @@ function buffer(length) {
    * @param {DecodeStream} rstream
    * @returns {Buffer}
    */
-  function decode(rstream) {
+  function decode(rstream): [Buffer, number] {
     let size = 0;
-    decode.bytes = 0;
+    let bytes = 0;
 
     // eslint-disable-next-line no-invalid-this
     const context = this;
@@ -80,7 +80,7 @@ function buffer(length) {
       size = length;
     } else if (istype) {
       size = length.decode.call(context, rstream);
-      decode.bytes += length.decode.bytes;
+      bytes += length.decode.bytes;
       checkLengthType(size);
     } else if (isfunc) {
       size = length(context);
@@ -95,14 +95,14 @@ function buffer(length) {
     }
 
     const buf = rstream.readBuffer(size);
-    decode.bytes += size;
+    bytes += size;
 
     if (isNull) {
-      decode.bytes += 1;
+      bytes += 1;
       rstream.consume(1);
     }
 
-    return buf;
+    return [buf, bytes];
   }
 
   /**
