@@ -67,12 +67,12 @@ function createFastStub(size, write, read) {
  */
 function createFastStubGeneric(size, write, read) {
   function encode(value, wstream: BinaryStream) {
-    wstream[write](value, 0, size);
+    wstream[write](value, size);
     return size;
   }
 
   function decode(rstream: BinaryStream) {
-    const ret = rstream[read](0, size);
+    const ret = rstream[read](size);
     return [ret, size];
   }
 

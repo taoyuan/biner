@@ -21,9 +21,9 @@ process.nextTick(() => {
 });
 
 setTimeout(() => {
-  source.push('binary-');
+  source.push('biner ');
 
   setImmediate(() => {
-    source.push('data works!1\0');
+    source.push('works!\0');
   });
 }, 0);

@@ -88,7 +88,7 @@ export class LinkedList {
    */
   get first() {
     if (this.isEmpty()) {
-      return;
+      return null;
     }
 
     return this.head && this.head.buffer;

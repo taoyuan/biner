@@ -1,34 +1,32 @@
-'use strict';
+import {expect} from "../support";
+import {BinaryStream, NotEnoughDataError}  from '../../src';
 
-const BinaryStream = require('lib/binary-stream');
-const NotEnoughDataError = require('lib/not-enough-data-error');
-
-describe('decode', () => {
-  test('readBuffer', () => {
+describe('stream/decode', () => {
+  it('readBuffer', () => {
     const buf = Buffer.from([0x1, 0x2, 0x3, 0x4, 0x5, 0x6]);
     const stream = new BinaryStream();
     stream.append(buf);
-    expect(stream.length).toBe(buf.length);
+    expect(stream.length).to.eql(buf.length);
 
     const wantRead = 2;
 
     const result = stream.readBuffer(wantRead);
-    expect(stream.length).toBe(buf.length - wantRead);
-    expect(result).toEqual(Buffer.from([0x1, 0x2]));
+    expect(stream.length).to.eql(buf.length - wantRead);
+    expect(result).to.eql(Buffer.from([0x1, 0x2]));
   });
 
-  test('readBuffer # out of bounds', () => {
+  it('readBuffer # out of bounds', () => {
     const buf = Buffer.from([0x1, 0x2]);
     const stream = new BinaryStream();
     stream.append(buf);
     const requestedBytes = buf.length + 1;
 
-    expect(() => stream.readBuffer(requestedBytes)).toThrow(NotEnoughDataError);
+    expect(() => stream.readBuffer(requestedBytes)).throw(NotEnoughDataError);
   });
 
-  test('default numbers', () => {
-    const suites = [
-      /* Type, size, test value */
+  it('default numbers', () => {
+    const suites: [string, number, number][] = [
+      /* Type, size, it value */
       ['DoubleBE', 8, Number.MAX_SAFE_INTEGER / 2],
       ['DoubleLE', 8, Number.MAX_SAFE_INTEGER / 2],
 
@@ -62,14 +60,14 @@ describe('decode', () => {
       const stream = new BinaryStream();
       stream.append(buf);
 
-      expect(stream[read]()).toBe(suite[2]);
-      expect(stream.length).toBe(buf.length - suite[1]);
+      expect(stream[read]()).to.eql(suite[2]);
+      expect(stream.length).to.eql(buf.length - suite[1]);
     }
   });
 
   describe('custom numbers', () => {
-    const suites = [
-      /* Type, size, test value */
+    const suites: [string, number, number][] = [
+      /* Type, size, it value */
       ['IntBE', 3, 0x7fffff - 1],
       ['UIntBE', 3, 0xffffff - 1],
 
@@ -83,14 +81,14 @@ describe('decode', () => {
       const read = `read${suite[0]}`;
       const write = `write${suite[0]}`;
 
-      test(read, () => {
+      it(read, () => {
         buf.fill(0);
         buf[write](suite[2], 0, suite[1]);
         const stream = new BinaryStream();
         stream.append(buf);
 
-        expect(stream[read](suite[1])).toBe(suite[2]);
-        expect(stream.length).toBe(buf.length - suite[1]);
+        expect(stream[read](suite[1])).to.eql(suite[2]);
+        expect(stream.length).to.eql(buf.length - suite[1]);
       });
     }
   });

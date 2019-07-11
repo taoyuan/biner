@@ -93,9 +93,9 @@ function parseBinary() {
   return [record, handshake];
 }
 
-console.time('binary data');
+console.time('biner');
 test(count);
-console.timeEnd('binary data');
+console.timeEnd('biner');
 
 console.time('binary');
 testBinary(count);

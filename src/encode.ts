@@ -13,27 +13,15 @@ import {BinaryStream} from './binary-stream';
  * @param {BinaryStream} [target]
  * @returns {BinaryStream}
  */
-export function encode(obj, type, target: BinaryStream): [BinaryStream, number] {
+export function encode(obj, type, target?: BinaryStream): number {
   const meta = new Metadata();
-
-  // Check for legacy interface.
-  if (type instanceof BinaryStream) {
-    const tmp = target;
-    target = type; // eslint-disable-line no-param-reassign
-    type = tmp; // eslint-disable-line no-param-reassign
-  }
-
-  if (!(target instanceof BinaryStream)) {
-    target = new BinaryStream(); // eslint-disable-line no-param-reassign
-  }
+  target = target || new BinaryStream(); // eslint-disable-line no-param-reassign
 
   encodeCommon(obj, target, type, meta);
 
-  // TODO check bytes is necessary
-  // encode.bytes = meta.bytes;
   Metadata.clean(meta);
 
-  return [target, meta.bytes];
+  return meta.bytes;
 }
 
 /**
@@ -44,8 +32,8 @@ export function encode(obj, type, target: BinaryStream): [BinaryStream, number] 
  */
 export function encodeCommon(object, wstream, typeOrSchema, context) {
   if (isType(typeOrSchema)) {
-    typeOrSchema.encode.call(context, object, wstream);
-    context[symbols.bytes] += typeOrSchema.encode.bytes;
+    const bytes = typeOrSchema.encode.call(context, object, wstream);
+    context[symbols.bytes] += bytes;
   } else {
     encodeSchema(object, wstream, typeOrSchema, context);
   }
@@ -81,8 +69,8 @@ function encodeSchema(object, wstream, schema, context) {
       continue; // eslint-disable-line no-continue
     }
 
-    type.encode.call(context, value, wstream);
-    context[symbols.bytes] += type.encode.bytes;
+    const bytes = type.encode.call(context, value, wstream);
+    context[symbols.bytes] += bytes;
   }
 }
 

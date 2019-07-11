@@ -10,7 +10,7 @@ import {Codec} from "../codec";
  * @param {number|Object} length The number of bytes or type for size-prefixed buffers.
  * @returns {Object}
  */
-export function buffer(length): Codec<Buffer> {
+export function buffer(length): Codec<Buffer | BinaryStream> {
   const isnum = typeof length === 'number';
   const istype = isType(length);
   const isfunc = isFunction(length);
@@ -43,8 +43,8 @@ export function buffer(length): Codec<Buffer> {
     }
 
     if (istype) {
-      length.encode.call(context, buf.length, wstream);
-      bytes += length.encode.bytes;
+      const b = length.encode.call(context, buf.length, wstream);
+      bytes += b;
     }
 
     if (isfunc) {
@@ -72,6 +72,7 @@ export function buffer(length): Codec<Buffer> {
   function decode(rstream): [Buffer, number] {
     let size = 0;
     let bytes = 0;
+    let count;
 
     // eslint-disable-next-line no-invalid-this
     const context = this;
@@ -79,8 +80,8 @@ export function buffer(length): Codec<Buffer> {
     if (isnum) {
       size = length;
     } else if (istype) {
-      size = length.decode.call(context, rstream);
-      bytes += length.decode.bytes;
+      [size, count] = length.decode.call(context, rstream);
+      bytes += count;
       checkLengthType(size);
     } else if (isfunc) {
       size = length(context);

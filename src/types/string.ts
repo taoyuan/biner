@@ -98,7 +98,6 @@ function decodeNullString(encoding) {
 
     const bytesWithNull = bytes + 1;
     const buf: Buffer = rstream.readBuffer(bytesWithNull);
-    // decode.bytes = bytesWithNull;
 
     return [buf.toString(encoding, 0, bytes), bytesWithNull];
   };
@@ -134,7 +133,6 @@ function encodeFixedString(size, encoding) {
 function decodeFixedString(size, encoding) {
   return function decode(rstream): [string, number] {
     const buf: Buffer = rstream.readBuffer(size);
-    // decode.bytes = size;
 
     return [buf.toString(encoding), size];
   };
@@ -152,8 +150,7 @@ function encodeSizePrefixedString(type, encoding) {
 
     const context = this;
 
-    type.encode.call(context, Buffer.byteLength(value, encoding), wstream);
-    let bytes = type.encode.bytes;
+    let bytes = type.encode.call(context, Buffer.byteLength(value, encoding), wstream);
 
     const buf = Buffer.from(value, encoding);
 
@@ -171,14 +168,14 @@ function encodeSizePrefixedString(type, encoding) {
  */
 function decodeSizePrefixedString(type, encoding) {
   return function decode(rstream): [string, number] {
-    const size = type.decode.call(this, rstream);
+    const [size, count] = type.decode.call(this, rstream);
 
     if (typeof size !== 'number') {
       throw new TypeError('Size of a string should be a number.');
     }
 
     const buf: Buffer = rstream.readBuffer(size);
-    let bytes = type.decode.bytes + buf.length;
+    let bytes = count + buf.length;
 
     return [buf.toString(encoding), bytes];
   };
@@ -234,7 +231,6 @@ function decodeCallback(callback, encoding) {
     checkLengthType(size);
 
     const buf: Buffer = rstream.readBuffer(size);
-    // decode.bytes = size;
 
     return [buf.toString(encoding), size];
   };

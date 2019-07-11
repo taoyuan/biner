@@ -9,7 +9,7 @@ const {
 const NetworkPacket = string(null);
 
 const output = createEncodeStream(NetworkPacket);
-const file = fs.createWriteStream('./encode.txt');
+const file = fs.createWriteStream('./example.bin');
 
 output.pipe(file);
 

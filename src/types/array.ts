@@ -47,7 +47,6 @@ export function array(type, length, lengthType = 'count'): Codec<any[]> {
     const context = Metadata.clone(this);
 
     let bytes = 0;
-    // encode.bytes = 0;
     let expectedSize = 0;
 
     if (istype) {
@@ -80,8 +79,8 @@ export function array(type, length, lengthType = 'count'): Codec<any[]> {
     }
 
     if (istype) {
-      length.encode.call(context, expectedSize, wstream);
-      bytes += length.encode.bytes;
+      const b = length.encode.call(context, expectedSize, wstream);
+      bytes += b;
     }
 
     items.forEach(item => {
@@ -100,8 +99,7 @@ export function array(type, length, lengthType = 'count'): Codec<any[]> {
    */
   function decode(rstream): [any[], number] {
     let expectedSize = 0;
-    let bytes = 0;
-    // decode.bytes = 0;
+    let bytes = 0, count;
 
     // eslint-disable-next-line no-invalid-this
     const context = Metadata.clone(this);
@@ -109,8 +107,8 @@ export function array(type, length, lengthType = 'count'): Codec<any[]> {
     if (isnum) {
       expectedSize = length;
     } else if (istype) {
-      expectedSize = length.decode.call(context, rstream);
-      bytes += length.decode.bytes;
+      [expectedSize, count] = length.decode.call(context, rstream);
+      bytes += count;
     } else if (isfunc) {
       expectedSize = length(context);
     }
@@ -217,7 +215,7 @@ function decodeBytes(type, lengthBytes, rstream, context) {
   let bytes = 0;
 
   while (bytes < lengthBytes) {
-    const [result] = decodeCommon(rstream, type, context);
+    const result = decodeCommon(rstream, type, context);
     items.push(result);
     bytes = context.bytes - before;
   }

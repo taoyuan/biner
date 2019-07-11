@@ -79,7 +79,7 @@ Decoding DTLS ClientHello packet, *nodejs 10.14.1 / Ubuntu 16.04 x64*
 
 |name|time|
 |---|---|
-|binary data|637.900ms|
+|biner|637.900ms|
 |binary|2229.218ms|
 
 ## API

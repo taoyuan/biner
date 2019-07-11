@@ -3,7 +3,7 @@
 import {BinaryStream} from "../binary-stream";
 import {Codec} from "../codec";
 
-const { isType } = require('src/util');
+const { isType } = require('../util');
 
 /**
  * Boolean type.
@@ -24,10 +24,9 @@ export function bool(type): Codec<boolean>  {
     // eslint-disable-next-line no-invalid-this
     const context = this;
 
-    const value = type.decode.call(context, rstream);
-    // decode.bytes = type.decode.bytes;
+    const [value, bytes] = type.decode.call(context, rstream);
 
-    return [Boolean(value), type.decode.bytes];
+    return [Boolean(value), bytes];
   }
 
   /**
@@ -39,9 +38,7 @@ export function bool(type): Codec<boolean>  {
     // eslint-disable-next-line no-invalid-this
     const context = this;
 
-    type.encode.call(context, value ? 1 : 0, wstream);
-    // encode.bytes = type.encode.bytes;
-    return type.encode.bytes;
+    return type.encode.call(context, value ? 1 : 0, wstream);
   }
 
   return {

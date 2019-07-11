@@ -13,18 +13,19 @@ import {BufioReader} from "./bufio";
  * @returns {*}
  */
 export function decode(rstream: BufioReader | Buffer, typeOrSchema): [any, number] {
-  let decodeStream = rstream;
+  let decodeStream: BufioReader;
 
   if (Buffer.isBuffer(rstream)) {
     const bs = new BinaryStream();
     bs.append(rstream);
     decodeStream = bs;
+  } else {
+    decodeStream = rstream;
   }
 
   const meta = new Metadata();
   const value = decodeCommon(decodeStream, typeOrSchema, meta);
 
-  // decode.bytes = meta.bytes;
   Metadata.clean(meta);
 
   return [value, meta.bytes];
@@ -39,8 +40,8 @@ export function decode(rstream: BufioReader | Buffer, typeOrSchema): [any, numbe
  */
 export function decodeCommon(rstream: BufioReader, typeOrSchema, meta) {
   if (isType(typeOrSchema)) {
-    const value = typeOrSchema.decode.call(meta, rstream);
-    meta[symbols.bytes] += typeOrSchema.decode.bytes;
+    const [value, bytes] = typeOrSchema.decode.call(meta, rstream);
+    meta[symbols.bytes] += bytes;
     return value;
   }
 
@@ -78,8 +79,8 @@ function decodeSchema(rstream, schema, meta) {
       continue; // eslint-disable-line no-continue
     }
 
-    const value = type.decode.call(meta, rstream);
-    meta[symbols.bytes] += type.decode.bytes;
+    const [value, bytes] = type.decode.call(meta, rstream);
+    meta[symbols.bytes] += bytes;
 
     if (type[symbols.skip] === true) {
       continue; // eslint-disable-line no-continue

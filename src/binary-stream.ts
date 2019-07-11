@@ -58,7 +58,7 @@ export class BinaryStream extends Transform implements Bufio {
    * @param {number} [end]
    * @returns {Buffer}
    */
-  slice(start, end) {
+  slice(start?: number, end?: number) {
     return this.buffer.slice(start, end);
   }
 
@@ -114,272 +114,164 @@ export class BinaryStream extends Transform implements Bufio {
     this.append(chunk);
   }
 
-  protected __read(method: string, size: number, offset: number = 0) {
+  protected doRead(method: string, size: number) {
     assertSize(size, this.length);
 
-    let res: number;
-    if (this.buffer[method] && this.buffer[method].length > 1) {
-      res = this.buffer[method](offset, size);
-    } else {
-      res = this.buffer[method](offset);
-    }
+    let res = this.buffer[method](0, size);
 
     this.consume(size);
 
     return res;
   }
 
-  protected __write(method: string, value: number, offset?: number, size?: number) {
-    return this.buffer[method](value, offset, size);
+  protected doWrite(method: string, value: number, size?: number) {
+    return size === undefined ? this.buffer[method](value) : this.buffer[method](value, size);
   }
 
-  readDoubleBE(offset: number): number {
-    return this.__read(arguments.callee.name, 8);
+  readDoubleBE(): number {
+    return this.doRead('readDoubleBE', 8);
   }
 
-  readDoubleLE(offset: number): number {
-    return this.__read(arguments.callee.name, 8);
+  readDoubleLE(): number {
+    return this.doRead('readDoubleLE', 8);
   }
 
-  readFloatBE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readFloatBE(): number {
+    return this.doRead('readFloatBE', 4);
   }
 
-  readFloatLE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readFloatLE(): number {
+    return this.doRead('readFloatLE', 4);
   }
 
-  readInt16BE(offset: number): number {
-    return this.__read(arguments.callee.name, 2);
+  readInt16BE(): number {
+    return this.doRead('readInt16BE', 2);
   }
 
-  readInt16LE(offset: number): number {
-    return this.__read(arguments.callee.name, 2);
+  readInt16LE(): number {
+    return this.doRead('readInt16LE', 2);
   }
 
-  readInt32BE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readInt32BE(): number {
+    return this.doRead('readInt32BE', 4);
   }
 
-  readInt32LE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readInt32LE(): number {
+    return this.doRead('readInt32LE', 4);
   }
 
-  readInt8(offset: number): number {
-    return this.__read(arguments.callee.name, 1);
+  readInt8(): number {
+    return this.doRead('readInt8', 1);
   }
 
-  readIntBE(offset: number, byteLength: number): number {
-    return this.__read(arguments.callee.name, byteLength);
+  readIntBE(byteLength: number): number {
+    return this.doRead('readIntBE', byteLength);
   }
 
-  readIntLE(offset: number, byteLength: number): number {
-    return this.__read(arguments.callee.name, byteLength);
+  readIntLE(byteLength: number): number {
+    return this.doRead('readIntLE', byteLength);
   }
 
-  readUInt16BE(offset: number): number {
-    return this.__read(arguments.callee.name, 2);
+  readUInt16BE(): number {
+    return this.doRead('readUInt16BE', 2);
   }
 
-  readUInt16LE(offset: number): number {
-    return this.__read(arguments.callee.name, 2);
+  readUInt16LE(): number {
+    return this.doRead('readUInt16LE', 2);
   }
 
-  readUInt32BE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readUInt32BE(): number {
+    return this.doRead('readUInt32BE', 4);
   }
 
-  readUInt32LE(offset: number): number {
-    return this.__read(arguments.callee.name, 4);
+  readUInt32LE(): number {
+    return this.doRead('readUInt32LE', 4);
   }
 
-  readUInt8(offset: number): number {
-    return this.__read(arguments.callee.name, 1);
+  readUInt8(): number {
+    return this.doRead('readUInt8', 1);
   }
 
-  readUIntBE(offset: number, byteLength: number): number {
-    return this.__read(arguments.callee.name, byteLength);
+  readUIntBE(byteLength: number): number {
+    return this.doRead('readUIntBE', byteLength);
   }
 
-  readUIntLE(offset: number, byteLength: number): number {
-    return this.__read(arguments.callee.name, byteLength);
+  readUIntLE(byteLength: number): number {
+    return this.doRead('readUIntLE', byteLength);
   }
 
-  writeDoubleBE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeDoubleBE(value: number): number {
+    return this.doWrite('writeDoubleBE', value)
   }
 
-  writeDoubleLE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeDoubleLE(value: number): number {
+    return this.doWrite('writeDoubleLE', value)
   }
 
-  writeFloatBE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeFloatBE(value: number): number {
+    return this.doWrite('writeFloatBE', value)
   }
 
-  writeFloatLE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeFloatLE(value: number): number {
+    return this.doWrite('writeFloatLE', value)
   }
 
-  writeInt16BE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeInt16BE(value: number): number {
+    return this.doWrite('writeInt16BE', value)
   }
 
-  writeInt16LE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset);
+  writeInt16LE(value: number): number {
+    return this.doWrite('writeInt16LE', value);
   }
 
-  writeInt32BE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeInt32BE(value: number): number {
+    return this.doWrite('writeInt32BE', value)
   }
 
-  writeInt32LE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeInt32LE(value: number): number {
+    return this.doWrite('writeInt32LE', value)
   }
 
-  writeInt8(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeInt8(value: number): number {
+    return this.doWrite('writeInt8', value)
   }
 
-  writeIntBE(value: number, offset: number, byteLength: number): number {
-    return this.__write(arguments.callee.name, value, offset, byteLength);
+  writeIntBE(value: number, byteLength: number): number {
+    return this.doWrite('writeIntBE', value, byteLength);
   }
 
-  writeIntLE(value: number, offset: number, byteLength: number): number {
-    return this.__write(arguments.callee.name, value, offset, byteLength);
+  writeIntLE(value: number, byteLength: number): number {
+    return this.doWrite('writeIntLE', value, byteLength);
   }
 
-  writeUInt16BE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeUInt16BE(value: number): number {
+    return this.doWrite('writeUInt16BE', value)
   }
 
-  writeUInt16LE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeUInt16LE(value: number): number {
+    return this.doWrite('writeUInt16LE', value)
   }
 
-  writeUInt32BE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeUInt32BE(value: number): number {
+    return this.doWrite('writeUInt32BE', value)
   }
 
-  writeUInt32LE(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeUInt32LE(value: number): number {
+    return this.doWrite('writeUInt32LE', value)
   }
 
-  writeUInt8(value: number, offset?: number): number {
-    return this.__write(arguments.callee.name, value, offset)
+  writeUInt8(value: number): number {
+    return this.doWrite('writeUInt8', value)
   }
 
-  writeUIntBE(value: number, offset: number, byteLength: number): number {
-    return this.__write(arguments.callee.name, value, offset, byteLength);
+  writeUIntBE(value: number, byteLength: number): number {
+    return this.doWrite('writeUIntBE', value, byteLength);
   }
 
-  writeUIntLE(value: number, offset: number, byteLength: number): number {
-    return this.__write(arguments.callee.name, value, offset, byteLength);
+  writeUIntLE(value: number, byteLength: number): number {
+    return this.doWrite('writeUIntLE', value, byteLength);
   }
-
 }
-
-//
-// const fixedReadMethods = {
-//   readDoubleBE: 8,
-//   readDoubleLE: 8,
-//   readFloatBE: 4,
-//   readFloatLE: 4,
-//   readInt32BE: 4,
-//   readInt32LE: 4,
-//   readUInt32BE: 4,
-//   readUInt32LE: 4,
-//   readInt16BE: 2,
-//   readInt16LE: 2,
-//   readUInt16BE: 2,
-//   readUInt16LE: 2,
-//   readInt8: 1,
-//   readUInt8: 1,
-// };
-//
-// const metaReadMethods = ['readIntBE', 'readIntLE', 'readUIntBE', 'readUIntLE'];
-//
-// Object.keys(fixedReadMethods).forEach(method => {
-//   const gen = createFunction();
-//
-//   gen(`
-//     function binary_${method}() {
-//       const bytes = ${gen.formats.d(fixedReadMethods[method])};
-//       assertSize(bytes, this.length);
-//
-//       const res = this.buffer.${method}(0);
-//       this.consume(bytes);
-//
-//       return res;
-//     }
-//   `);
-//
-//   BinaryStream.prototype[method] = gen.toFunction({assertSize});
-// });
-//
-// metaReadMethods.forEach(method => {
-//   const gen = createFunction();
-//
-//   gen(`
-//     function binary_${method}(size) {
-//       assertSize(size, this.length);
-//
-//       const res = this.buffer.${method}(size, 0);
-//       this.consume(size);
-//       return res;
-//     }
-//   `);
-//
-//   BinaryStream.prototype[method] = gen.toFunction({assertSize});
-// });
-//
-// const fixedWriteMethods = [
-//   'writeDoubleBE',
-//   'writeDoubleLE',
-//   'writeFloatBE',
-//   'writeFloatLE',
-//   'writeInt32BE',
-//   'writeInt32LE',
-//   'writeUInt32BE',
-//   'writeUInt32LE',
-//   'writeInt16BE',
-//   'writeInt16LE',
-//   'writeUInt16BE',
-//   'writeUInt16LE',
-//   'writeInt8',
-//   'writeUInt8',
-// ];
-//
-// fixedWriteMethods.forEach(method => {
-//   const gen = createFunction();
-//
-//   gen(`
-//     function binary_${method}(value) {
-//       this.buffer.${method}(value);
-//     }
-//   `);
-//
-//   BinaryStream.prototype[method] = gen.toFunction();
-// });
-//
-// const metaWriteMethods = [
-//   'writeIntBE',
-//   'writeIntLE',
-//   'writeUIntBE',
-//   'writeUIntLE',
-// ];
-//
-// metaWriteMethods.forEach(method => {
-//   const gen = createFunction();
-//
-//   gen(`
-//     function binary_${method}(value, size) {
-//       this.buffer.${method}(value, size);
-//     }
-//   `);
-//
-//   BinaryStream.prototype[method] = gen.toFunction();
-// });
 
 /**
  * Check if stream is able to read requested amound of data.

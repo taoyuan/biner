@@ -9,6 +9,6 @@ const {
 const NetworkPacket = string(null);
 
 const input = createDecodeStream(NetworkPacket);
-const file = fs.createReadStream('./encode.txt', null);
+const file = fs.createReadStream('./example.bin', null);
 
 file.pipe(input).on('data', line => console.log(line));

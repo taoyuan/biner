@@ -48,11 +48,11 @@ export function createEncodeStream(schema) {
 }
 
 /**
- * Create transform stream to decode binary data into object.
+ * Create transform stream to decode biner into object.
  * @param {Buffer|Object} [bufOrSchema]
  * @returns {DecodeStream}
  */
-export function createDecodeStream(bufOrSchema) {
+export function createDecodeStream(bufOrSchema?) {
   let schema = null;
   const isBuffer = Buffer.isBuffer(bufOrSchema);
 

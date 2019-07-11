@@ -1,16 +1,20 @@
 {
   "name": "biner",
   "version": "0.6.0",
-  "description": "Declarative binary data encoder / decoder.",
-  "main": "src/index.js",
+  "description": "Declarative biner encoder / decoder.",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "scripts": {
-    "cover": "npx jest --coverage",
-    "test": "npx jest",
-    "test-ci": "npm run cover"
+    "clean": "rimraf lib",
+    "format": "prettier --write \"{src,test}/**/*.ts\" --single-quote --trailing-comma es5",
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run clean && echo Using TypeScript && tsc --version",
+    "build": "tsc --pretty",
+    "test": "npm run build && nyc mocha --require ts-node/register --recursive \"test/**/*.test.ts\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reklatsmasters/biner.git"
+    "url": "git+https://github.com/taoyuan/biner.git"
   },
   "keywords": [
     "binary",
@@ -24,12 +28,12 @@
     "restructure",
     "varstruct"
   ],
-  "author": "Dmitry Tsvettsikh <me@reklatsmasters.com>",
+  "author": "Dmitry Tsvettsikh <me@taoyuan.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reklatsmasters/biner/issues"
+    "url": "https://github.com/taoyuan/biner/issues"
   },
-  "homepage": "https://github.com/reklatsmasters/biner#readme",
+  "homepage": "https://github.com/taoyuan/biner#readme",
   "engines": {
     "node": ">=6"
   },
@@ -38,45 +42,34 @@
     "is-plain-object": "^3.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
+    "@types/chai": "^4.1.7",
+    "@types/chai-spies": "^1.0.0",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.6",
     "binary": "^0.3.0",
     "bl": "^3.0.0",
-    "jest": "^24.8.0",
+    "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
-    "ts-jest": "^24.0.2",
     "ts-node": "^8.3",
     "typescript": "^3.5"
   },
-  "jest": {
-    "modulePaths": [
-      "<rootDir>",
-      "<rootDir>/src",
-      "<rootDir>/src/node_modules"
+  "nyc": {
+    "extension": [
+      ".ts"
     ],
-    "testMatch": [
-      "**/test/**/*.test.ts"
+    "exclude": [
+      "**/*.d.ts",
+      "**/*.js",
+      "test"
     ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/"
+    "reporter": [
+      "text",
+      "html"
     ],
-    "coverageDirectory": "<rootDir>/coverage",
-    "collectCoverageFrom": [
-      "**/src/*.js",
-      "**/src/node_modules/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/node_modules/"
-    ],
-    "cacheDirectory": ".jest-cache",
-    "haste": {
-      "providesModuleNodeModules": [
-        "internal",
-        "lib",
-        "streams",
-        "types"
-      ]
-    }
+    "all": true
   }
 }
