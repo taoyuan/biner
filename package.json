@@ -1,9 +1,12 @@
 {
   "name": "biner",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Declarative biner encoder / decoder.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "format": "prettier --write \"{src,test}/**/*.ts\" --single-quote --trailing-comma es5",
@@ -35,7 +38,7 @@
   },
   "homepage": "https://github.com/taoyuan/biner#readme",
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "dependencies": {
     "generate-function": "^2.3.1",
