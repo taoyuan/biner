@@ -16,6 +16,7 @@ import {Transaction}  from './transaction';
 import {NotEnoughDataError}  from './not-enough-data-error';
 
 const types = {
+  ...numbers,
   array,
   bool,
   buffer,
@@ -24,10 +25,6 @@ const types = {
   when,
   select,
 };
-
-for (const type of Object.keys(numbers)) {
-  types[type] = numbers[type]; // eslint-disable-line security/detect-object-injection
-}
 
 const kschema = Symbol('schema');
 
