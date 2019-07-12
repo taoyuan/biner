@@ -31,7 +31,13 @@
     "restructure",
     "varstruct"
   ],
-  "author": "Dmitry Tsvettsikh <me@taoyuan.com>",
+  "author": "Dmitry Tsvettsikh <me@reklatsmasters.com>",
+  "contributors": [
+    {
+      "name": "Yuan Tao",
+      "email": "towyuan@outlook.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/taoyuan/biner/issues"
