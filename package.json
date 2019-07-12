@@ -1,6 +1,6 @@
 {
   "name": "biner",
-  "version": "0.7.1",
+  "version": "0.7.3",
   "description": "Declarative biner encoder / decoder.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -39,10 +39,6 @@
   "homepage": "https://github.com/taoyuan/biner#readme",
   "engines": {
     "node": ">=10"
-  },
-  "dependencies": {
-    "generate-function": "^2.3.1",
-    "is-plain-object": "^3.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
