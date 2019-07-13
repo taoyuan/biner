@@ -13,7 +13,7 @@ import {BinaryStream} from './binary-stream';
  * @param {BinaryStream} [target]
  * @returns {BinaryStream}
  */
-export function encode(obj, type, target?: BinaryStream): number {
+export function encode(obj, type, target?: BinaryStream): [BinaryStream, number] {
   const meta = new Metadata();
   target = target || new BinaryStream(); // eslint-disable-line no-param-reassign
 
@@ -21,7 +21,7 @@ export function encode(obj, type, target?: BinaryStream): number {
 
   Metadata.clean(meta);
 
-  return meta.bytes;
+  return [target, meta.bytes];
 }
 
 /**

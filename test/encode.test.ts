@@ -23,7 +23,7 @@ describe('encode', () => {
       b: 200,
     };
 
-    const count = encode(object, schema, wstream);
+    const [, count] = encode(object, schema, wstream);
 
     expect(schema.a.encode).to.have.been.called.exactly(1);
     expect(schema.b.encode).to.have.been.called.exactly(1);
@@ -53,7 +53,7 @@ describe('encode', () => {
       a: 100,
     };
 
-    const count = encode(object, schema, wstream);
+    const [, count] = encode(object, schema, wstream);
 
     expect(schema.a.encode).to.be.called();
     expect(itemType.encode).to.be.called();
@@ -105,7 +105,7 @@ describe('encode', () => {
       c: 100,
     };
 
-    const count = encode(object, schema, wstream);
+    const [, count] = encode(object, schema, wstream);
     expect(encodeFn).to.have.been.called.exactly(2);
     expect(count).to.eql(bytes * 2);
   });
@@ -122,9 +122,9 @@ describe('encode', () => {
       a: 100,
     };
 
-    const res = encode(object, schema);
+    const [, count] = encode(object, schema);
 
     expect(schema.a.encode).to.have.been.called.exactly(1);
-    expect(res).to.eql(bytes);
+    expect(count).to.eql(bytes);
   });
 });
