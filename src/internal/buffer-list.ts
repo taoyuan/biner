@@ -1,5 +1,4 @@
 import {LinkedList} from './linked-list';
-import {Bufio} from "../bufio";
 
 /**
  * An optimised partial implementation of Buffer list from `bl`.

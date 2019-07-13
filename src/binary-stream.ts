@@ -5,14 +5,12 @@ import {BufferList} from './internal/buffer-list';
 import {NotEnoughDataError} from './not-enough-data-error';
 import {Bufio} from "./bufio";
 
-const kbuffer = Symbol('buffer');
-
 /**
  * Binary data queue.
  * Also represent a part of BufferList API.
  */
 export class BinaryStream extends Transform implements Bufio {
-  [kbuffer]: BufferList;
+  _bl: BufferList;
 
   /**
    * @class Binary
@@ -21,14 +19,14 @@ export class BinaryStream extends Transform implements Bufio {
   constructor(options = {}) {
     super(options);
 
-    this[kbuffer] = new BufferList();
+    this._bl = new BufferList();
   }
 
   /**
    * @returns {BufferList}
    */
   get buffer(): BufferList {
-    return this[kbuffer];
+    return this._bl;
   }
 
   /**
