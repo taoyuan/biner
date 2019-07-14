@@ -33,7 +33,7 @@ const kschema = Symbol('schema');
  * @param {Object} [schema]
  * @returns {EncodeStream}
  */
-export function createEncodeStream(schema) {
+export function createEncodeStream(schema?) {
   const stream = new BinaryStream({
     readableObjectMode: false,
     writableObjectMode: true,
