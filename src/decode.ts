@@ -12,7 +12,7 @@ import {BufioReader} from "./bufio";
  * @param {Object} typeOrSchema Builtin data type or schema.
  * @returns {*}
  */
-export function decode(rstream: BufioReader | Buffer, typeOrSchema): [any, number] {
+export function decode<T>(rstream: BufioReader | Buffer, typeOrSchema): [T, number] {
   let decodeStream: BufioReader;
 
   if (Buffer.isBuffer(rstream)) {

@@ -1,7 +1,7 @@
 {
   "name": "biner",
   "version": "0.8.1",
-  "description": "Declarative biner encoder / decoder.",
+  "description": "Declarative binary data encoder / decoder.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "files": [

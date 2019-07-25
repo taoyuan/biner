@@ -1,5 +1,3 @@
-'use strict';
-
 import {BinaryStream}  from './binary-stream';
 import {array}  from './types/array';
 import {buffer}  from './types/buffer';
@@ -31,9 +29,9 @@ const kschema = Symbol('schema');
 /**
  * Create transform stream to encode objects into Buffer.
  * @param {Object} [schema]
- * @returns {EncodeStream}
+ * @returns {BinaryStream}
  */
-export function createEncodeStream(schema?) {
+export function createEncodeStream(schema?): BinaryStream {
   const stream = new BinaryStream({
     readableObjectMode: false,
     writableObjectMode: true,
@@ -45,9 +43,9 @@ export function createEncodeStream(schema?) {
 }
 
 /**
- * Create transform stream to decode biner into object.
+ * Create transform stream to decode binary data into object.
  * @param {Buffer|Object} [bufOrSchema]
- * @returns {DecodeStream}
+ * @returns {BinaryStream}
  */
 export function createDecodeStream(bufOrSchema?) {
   let schema = null;
