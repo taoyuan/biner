@@ -1,6 +1,6 @@
 {
   "name": "biner",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Declarative binary data encoder / decoder.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -55,7 +55,7 @@
     "bl": "^3.0.0",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
