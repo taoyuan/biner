@@ -5,7 +5,7 @@ import {encodeCommon} from '../encode';
 import {encodingLengthCommon} from '../encoding-length';
 import {isType, isUserType, isFunction} from '../util';
 import {Metadata} from '../internal/meta';
-import {Codec} from "../codec";
+import {Codec} from "../common";
 
 
 /**

@@ -1,6 +1,6 @@
 'use strict';
 
-import {NotEnoughDataError} from './not-enough-data-error';
+import {NotEnoughDataError} from './errors';
 import {BinaryStream} from "./binary-stream";
 import {BufioReader} from "./bufio";
 

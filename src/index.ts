@@ -11,7 +11,7 @@ import { encode }  from './encode';
 import { decode }  from './decode';
 import { encodingLength }  from './encoding-length';
 import {Transaction}  from './transaction';
-import {NotEnoughDataError}  from './not-enough-data-error';
+import {NotEnoughDataError}  from './errors';
 
 const types = {
   ...numbers,

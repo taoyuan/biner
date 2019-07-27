@@ -1,5 +1,3 @@
-'use strict';
-
 import {isUserType, isType} from './util';
 import * as symbols from './internal/symbols';
 import {Metadata} from './internal/meta';
@@ -26,7 +24,7 @@ export function encodingLength(obj, schema) {
  * @param {Metadata} context
  */
 export function encodingLengthCommon(item, typeOrSchema, context) {
-  if (isType(typeOrSchema)) {
+  if (isType(typeOrSchema) && typeOrSchema.encodingLength) {
     context[symbols.bytes] += typeOrSchema.encodingLength.call(context, item);
   } else {
     encodingLengthSchema(item, typeOrSchema, context);
@@ -63,6 +61,8 @@ function encodingLengthSchema(item, schema, context) {
       continue; // eslint-disable-line no-continue
     }
 
-    context[symbols.bytes] += type.encodingLength.call(context, value);
+    if (type.encodingLength) {
+      context[symbols.bytes] += type.encodingLength.call(context, value);
+    }
   }
 }

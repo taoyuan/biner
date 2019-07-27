@@ -1,7 +1,7 @@
 'use strict';
 
 import {BinaryStream} from "../binary-stream";
-import {Codec} from "../codec";
+import {Codec} from "../common";
 
 const { isType } = require('../util');
 

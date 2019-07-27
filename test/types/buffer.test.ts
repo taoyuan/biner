@@ -204,7 +204,7 @@ describe('types/buffer', () => {
       // @ts-ignore
       spy.on(wstream, 'writeUInt8');
 
-      const type = buffer(null);
+      const type = buffer();
 
       const count = type.encode(buf, wstream);
 

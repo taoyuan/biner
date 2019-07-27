@@ -3,7 +3,7 @@
 import * as symbols from '../internal/symbols';
 import {decodeCommon} from '../decode';
 import {Metadata} from '../internal/meta';
-import {Codec} from "../codec";
+import {Codec} from "../common";
 
 /**
  * Type for multiple conditions.

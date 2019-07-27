@@ -6,7 +6,7 @@ import {decodeCommon} from '../decode';
 import {encodeCommon} from '../encode';
 import {encodingLengthCommon} from '../encoding-length';
 import {Metadata} from '../internal/meta';
-import {Codec} from "../codec";
+import {Codec} from "../common";
 
 /**
  * Type for conditions.

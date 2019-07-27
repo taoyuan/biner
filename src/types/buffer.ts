@@ -1,22 +1,22 @@
 'use strict';
 
-import {isType, isFunction} from '../util';
-import {NotEnoughDataError} from '../not-enough-data-error';
+import {isType, isFunction, isNumber, isNull} from '../util';
+import {NotEnoughDataError} from '../errors';
 import {BinaryStream} from '../binary-stream';
-import {Codec} from "../codec";
+import {Codec, DataType} from "../common";
 
 /**
  * Buffer type.
  * @param {number|Object} length The number of bytes or type for size-prefixed buffers.
  * @returns {Object}
  */
-export function buffer(length): Codec<Buffer | BinaryStream> {
-  const isnum = typeof length === 'number';
+export function buffer(length?: number | Function | DataType | null): Codec<Buffer | BinaryStream> {
+  const isnum = isNumber(length);
   const istype = isType(length);
   const isfunc = isFunction(length);
-  const isNull = length === null;
+  const isnull = isNull(length);
 
-  if (!isnum && !istype && !isfunc && !isNull) {
+  if (!isnum && !istype && !isfunc && !isnull) {
     throw new TypeError('Unknown type of argument #1.');
   }
 
@@ -42,12 +42,12 @@ export function buffer(length): Codec<Buffer | BinaryStream> {
       checkLength(length, buf.length);
     }
 
-    if (istype) {
+    if (isType(length)) {
       const b = length.encode.call(context, buf.length, wstream);
       bytes += b;
     }
 
-    if (isfunc) {
+    if (isFunction(length)) {
       const expectedLength = length(context);
 
       checkLengthType(expectedLength);
@@ -57,7 +57,7 @@ export function buffer(length): Codec<Buffer | BinaryStream> {
     wstream.writeBuffer(Buffer.isBuffer(buf) ? buf : buf.buffer);
     bytes += buf.length;
 
-    if (isNull) {
+    if (isnull) {
       wstream.writeUInt8(0);
       bytes += 1;
     }
@@ -77,17 +77,17 @@ export function buffer(length): Codec<Buffer | BinaryStream> {
     // eslint-disable-next-line no-invalid-this
     const context = this;
 
-    if (isnum) {
+    if (isNumber(length)) {
       size = length;
-    } else if (istype) {
+    } else if (isType(length)) {
       [size, count] = length.decode.call(context, rstream);
       bytes += count;
       checkLengthType(size);
-    } else if (isfunc) {
+    } else if (isFunction(length)) {
       size = length(context);
 
       checkLengthType(size);
-    } else if (isNull) {
+    } else if (isnull) {
       size = rstream.indexOf(0);
 
       if (size === -1) {
@@ -98,7 +98,7 @@ export function buffer(length): Codec<Buffer | BinaryStream> {
     const buf = rstream.readBuffer(size);
     bytes += size;
 
-    if (isNull) {
+    if (isnull) {
       bytes += 1;
       rstream.consume(1);
     }
@@ -115,14 +115,14 @@ export function buffer(length): Codec<Buffer | BinaryStream> {
     checkBuffer(buf);
     let size = 0;
 
-    if (isnum) {
+    if (isNumber(length)) {
       return length;
     }
 
-    if (isNull) {
+    if (isNull(length)) {
       size = 1;
-    } else if (istype) {
-      size = length.encodingLength(buf.length);
+    } else if (isType(length)) {
+      size = length.encodingLength && length.encodingLength(buf.length);
     }
 
     return size + buf.length;

@@ -2,8 +2,8 @@
 
 import {BinaryStream} from "../binary-stream";
 import {isType} from '../util';
-import {NotEnoughDataError} from '../not-enough-data-error';
-import {Codec} from "../codec";
+import {NotEnoughDataError} from '../errors';
+import {Codec} from "../common";
 
 /**
  * Type for strings.

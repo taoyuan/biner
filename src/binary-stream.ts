@@ -1,8 +1,6 @@
-'use strict';
-
 import {Transform} from 'stream';
 import {BufferList} from './internal/buffer-list';
-import {NotEnoughDataError} from './not-enough-data-error';
+import {NotEnoughDataError} from './errors';
 import {Bufio} from "./bufio";
 
 /**

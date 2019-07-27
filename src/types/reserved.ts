@@ -1,12 +1,10 @@
-'use strict';
-
 import {decodeCommon} from '../decode';
 import {encodeCommon} from '../encode';
 import {encodingLengthCommon} from '../encoding-length';
 import {isType, isFunction} from '../util';
 import * as symbols from '../internal/symbols';
 import {Metadata} from '../internal/meta';
-import {Codec} from "../codec";
+import {Codec} from "../common";
 import {BinaryStream} from "../binary-stream";
 
 /**

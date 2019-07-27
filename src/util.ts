@@ -1,5 +1,7 @@
 'use strict';
 
+import {DataType} from "./common";
+
 export function isObject(val) {
   return val != null && typeof val === 'object' && !Array.isArray(val);
 }
@@ -32,12 +34,20 @@ function isPlainObject(o) {
 
 export const isUserType: (o: any) => boolean = isPlainObject;
 
+export function isNull(value): value is null {
+  return value == null;
+}
+
+export function isNumber(value): value is number {
+  return typeof value === 'number';
+}
+
 /**
  * Check if argument is data type.
  * @param {*} type
  * @returns {boolean}
  */
-export function isType(type) {
+export function isType(type): type is DataType {
   return isObject(type) && isFunction(type.encode) && isFunction(type.decode);
 }
 
