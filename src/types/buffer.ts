@@ -147,9 +147,7 @@ function checkBuffer(buf) {
  */
 function checkLength(requiredSize, havingSize) {
   if (requiredSize !== havingSize) {
-    throw new Error(
-      `Buffer required length ${requiredSize} instead of ${havingSize}`
-    );
+    throw new Error(`Buffer required length ${requiredSize} instead of ${havingSize}`);
   }
 }
 

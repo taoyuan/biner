@@ -24,22 +24,29 @@ const types = {
   select,
 };
 
-const kschema = Symbol('schema');
+export interface Encoder {
+  encode(): [any, number];
+}
+
+export interface Decoder {
+  decode(data: any): [any, number];
+}
+
+export interface Schema {
+  [name: string]: any;
+}
 
 /**
  * Create transform stream to encode objects into Buffer.
  * @param {Object} [schema]
  * @returns {BinaryStream}
  */
-export function createEncodeStream(schema?): BinaryStream {
-  const stream = new BinaryStream({
+export function createEncodeStream(schema?: Schema): BinaryStream {
+  return new BinaryStream({
     readableObjectMode: false,
     writableObjectMode: true,
-    transform: transformEncode,
+    transform: createTransformEncode(schema),
   });
-
-  stream[kschema] = schema;
-  return stream;
 }
 
 /**
@@ -47,21 +54,19 @@ export function createEncodeStream(schema?): BinaryStream {
  * @param {Buffer|Object} [bufOrSchema]
  * @returns {BinaryStream}
  */
-export function createDecodeStream(bufOrSchema?) {
-  let schema = null;
+export function createDecodeStream(bufOrSchema?: Buffer | Schema) {
+  let schema: Schema | undefined = undefined;
   const isBuffer = Buffer.isBuffer(bufOrSchema);
 
-  if (!isBuffer) {
+  if (bufOrSchema && !isBuffer) {
     schema = bufOrSchema;
   }
 
   const stream = new BinaryStream({
-    transform: transformDecode,
+    transform: createTransformDecode(schema),
     readableObjectMode: true,
     writableObjectMode: false,
   });
-
-  stream[kschema] = schema;
 
   if (isBuffer) {
     stream.append(bufOrSchema);
@@ -72,47 +77,46 @@ export function createDecodeStream(bufOrSchema?) {
 
 /**
  * The `transform` function for transform stream.
- * @param {*} chunk Any valid js data type.
- * @param {string} encoding
- * @param {Function} cb
  */
-function transformEncode(chunk, encoding, cb) {
-  try {
-    encode(chunk, this[kschema], this);
+function createTransformEncode(schema?: Schema) {
+  return function transformEncode(chunk, encoding, cb) {
+    try {
+      encode(chunk, schema, this);
 
-    const buf = this.slice();
-    this.consume(buf.length);
+      const buf = this.slice();
+      this.consume(buf.length);
 
-    cb(null, buf);
-  } catch (error) {
-    cb(error);
+      cb(null, buf);
+    } catch (error) {
+      cb(error);
+    }
   }
 }
 
+
 /**
  * The `transform` function for transform stream.
- * @param {*} chunk Any valid js data type.
- * @param {string} encoding
- * @param {Function} cb
  */
-function transformDecode(chunk, encoding, cb) {
-  this.append(chunk);
+function createTransformDecode(schema?: Schema) {
+  return function (chunk, encoding, cb) {
+    this.append(chunk);
 
-  try {
-    while (this.length > 0) {
-      const transaction = new Transaction(this);
-      const data = decode(transaction, this[kschema]);
+    try {
+      while (this.length > 0) {
+        const transaction = new Transaction(this);
+        const data = decode(transaction, schema);
 
-      transaction.commit();
-      this.push(data);
-    }
+        transaction.commit();
+        this.push(data);
+      }
 
-    cb();
-  } catch (error) {
-    if (error instanceof NotEnoughDataError) {
       cb();
-    } else {
-      cb(error);
+    } catch (error) {
+      if (error instanceof NotEnoughDataError) {
+        cb();
+      } else {
+        cb(error);
+      }
     }
   }
 }
