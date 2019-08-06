@@ -24,14 +24,6 @@ const types = {
   select,
 };
 
-export interface Encoder {
-  encode(): [any, number];
-}
-
-export interface Decoder {
-  decode(data: any): [any, number];
-}
-
 export interface Schema {
   [name: string]: any;
 }
