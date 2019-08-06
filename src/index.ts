@@ -126,6 +126,7 @@ export {
   types,
 
   /* Re-export utils */
+  Transaction,
   BinaryStream,
   NotEnoughDataError,
 }
