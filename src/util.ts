@@ -1,5 +1,3 @@
-'use strict';
-
 import {DataType} from "./common";
 
 export function isObject(val) {

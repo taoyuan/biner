@@ -1,16 +1,14 @@
-'use strict';
-
 import {BinaryStream} from "../binary-stream";
 import {Codec} from "../common";
 
-const { isType } = require('../util');
+const {isType} = require('../util');
 
 /**
  * Boolean type.
  * @param {Object} type Any builtin type or schema.
  * @returns {Object}
  */
-export function bool(type): Codec<boolean>  {
+export function bool(type): Codec<boolean> {
   if (!isType(type)) {
     throw new TypeError('Argument #1 should be valid type.');
   }

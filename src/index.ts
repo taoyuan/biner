@@ -1,17 +1,17 @@
-import {BinaryStream}  from './binary-stream';
-import {array}  from './types/array';
-import {buffer}  from './types/buffer';
-import {bool}  from './types/bool';
-import {reserved}  from './types/reserved';
-import {string}  from './types/string';
-import {numbers}  from './types/numbers';
-import {when}  from './types/when';
-import {select}  from './types/select';
-import { encode }  from './encode';
-import { decode }  from './decode';
-import { encodingLength }  from './encoding-length';
-import {Transaction}  from './transaction';
-import {NotEnoughDataError}  from './errors';
+import {BinaryStream} from './binary-stream';
+import {array} from './types/array';
+import {buffer} from './types/buffer';
+import {bool} from './types/bool';
+import {reserved} from './types/reserved';
+import {string} from './types/string';
+import {numbers} from './types/numbers';
+import {when} from './types/when';
+import {select} from './types/select';
+import {encode} from './encode';
+import {decode} from './decode';
+import {encodingLength} from './encoding-length';
+import {Transaction} from './transaction';
+import {NotEnoughDataError} from './errors';
 
 const types = {
   ...numbers,
@@ -113,6 +113,11 @@ function createTransformDecode(schema?: Schema) {
   }
 }
 
+export * from './errors';
+export * from './binio';
+export * from './transaction';
+export * from './binary-stream';
+
 export const createEncode = createEncodeStream;
 export const createDecode = createDecodeStream;
 
@@ -124,9 +129,4 @@ export {
 
   /* Data types */
   types,
-
-  /* Re-export utils */
-  Transaction,
-  BinaryStream,
-  NotEnoughDataError,
 }

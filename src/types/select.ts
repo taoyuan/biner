@@ -1,5 +1,3 @@
-'use strict';
-
 import * as symbols from '../internal/symbols';
 import {decodeCommon} from '../decode';
 import {Metadata} from '../internal/meta';

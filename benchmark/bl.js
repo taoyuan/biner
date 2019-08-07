@@ -1,4 +1,4 @@
-'use strict';
+
 
 const bl = require('bl'); // eslint-disable-line node/no-unpublished-require
 const {BufferList} = require('../lib/internal/buffer-list');

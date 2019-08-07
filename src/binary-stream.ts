@@ -1,13 +1,13 @@
 import {Transform} from 'stream';
 import {BufferList} from './internal/buffer-list';
 import {NotEnoughDataError} from './errors';
-import {Bufio} from "./bufio";
+import {BinReadWriter} from "./binio";
 
 /**
  * Binary data queue.
  * Also represent a part of BufferList API.
  */
-export class BinaryStream extends Transform implements Bufio {
+export class BinaryStream extends Transform implements BinReadWriter {
   _bl: BufferList;
 
   /**

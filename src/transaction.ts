@@ -1,13 +1,11 @@
-'use strict';
-
 import {NotEnoughDataError} from './errors';
 import {BinaryStream} from "./binary-stream";
-import {BufioReader} from "./bufio";
+import {BinReader} from "./binio";
 
 /**
  * Helps to read the whole data chunk.
  */
-export class Transaction implements BufioReader {
+export class Transaction implements BinReader {
   stream: BinaryStream;
   index: number;
 

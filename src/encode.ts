@@ -1,5 +1,3 @@
-'use strict';
-
 import {isUserType, isEncodeType, isType} from './util';
 
 import * as symbols from './internal/symbols';

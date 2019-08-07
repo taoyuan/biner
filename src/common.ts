@@ -15,7 +15,10 @@ export interface DataType extends DataEncodeType, DataDecodeType {
 
 export interface Codec<T> {
   [symbols.skip]?: boolean;
+
   encode(value: T, wstream: BinaryStream): number;
+
   decode(rstream: BinaryStream): [T, number];
+
   encodingLength(value: T): number;
 }

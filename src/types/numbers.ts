@@ -1,5 +1,3 @@
-'use strict';
-
 import {BinaryStream} from "../binary-stream";
 
 export const numbers = {

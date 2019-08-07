@@ -1,10 +1,8 @@
-'use strict';
-
 import {isType, isUserType, isDecodeType} from './util';
 import {BinaryStream} from './binary-stream';
 import * as symbols from './internal/symbols';
 import {Metadata} from './internal/meta';
-import {BufioReader} from "./bufio";
+import {BinReader} from "./binio";
 
 /**
  * Decode any data from provided stream using schema.
@@ -12,8 +10,8 @@ import {BufioReader} from "./bufio";
  * @param {Object} typeOrSchema Builtin data type or schema.
  * @returns {*}
  */
-export function decode<T>(rstream: BufioReader | Buffer, typeOrSchema): [T, number] {
-  let decodeStream: BufioReader;
+export function decode<T>(rstream: BinReader | Buffer, typeOrSchema): [T, number] {
+  let decodeStream: BinReader;
 
   if (Buffer.isBuffer(rstream)) {
     const bs = new BinaryStream();
@@ -38,7 +36,7 @@ export function decode<T>(rstream: BufioReader | Buffer, typeOrSchema): [T, numb
  * @param {Metadata} meta
  * @returns {*}
  */
-export function decodeCommon(rstream: BufioReader, typeOrSchema, meta) {
+export function decodeCommon(rstream: BinReader, typeOrSchema, meta) {
   if (isType(typeOrSchema)) {
     const [value, bytes] = typeOrSchema.decode.call(meta, rstream);
     meta[symbols.bytes] += bytes;

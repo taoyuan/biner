@@ -1,4 +1,4 @@
-'use strict';
+
 
 const { types, decode } = require('..');
 const binary = require('binary'); // eslint-disable-line node/no-unpublished-require

@@ -1,5 +1,3 @@
-'use strict';
-
 import {isType, isFunction, isNumber, isNull} from '../util';
 import {NotEnoughDataError} from '../errors';
 import {BinaryStream} from '../binary-stream';

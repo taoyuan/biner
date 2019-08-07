@@ -1,4 +1,4 @@
-'use strict';
+
 import {expect, spy, noop} from "../support";
 import {BinaryStream} from "../../src";
 import {when} from '../../src/types/when';

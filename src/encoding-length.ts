@@ -2,7 +2,6 @@ import {isUserType, isType} from './util';
 import * as symbols from './internal/symbols';
 import {Metadata} from './internal/meta';
 
-
 /**
  * Get the number of bytes to encode `obj` using `schema`.
  * @param {*} obj Any valid js object.

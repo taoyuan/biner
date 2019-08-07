@@ -1,5 +1,3 @@
-'use strict';
-
 import {decodeCommon} from '../decode';
 import {encodeCommon} from '../encode';
 import {encodingLengthCommon} from '../encoding-length';
