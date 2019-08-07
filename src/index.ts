@@ -71,7 +71,7 @@ export function createDecodeStream(bufOrSchema?: Buffer | Schema) {
  * The `transform` function for transform stream.
  */
 function createTransformEncode(schema?: Schema) {
-  return function transformEncode(chunk, encoding, cb) {
+  return function transformEncode(this: BinaryStream, chunk, encoding, cb) {
     try {
       encode(chunk, schema, this);
 
@@ -90,7 +90,7 @@ function createTransformEncode(schema?: Schema) {
  * The `transform` function for transform stream.
  */
 function createTransformDecode(schema?: Schema) {
-  return function (chunk, encoding, cb) {
+  return function (this: BinaryStream, chunk, encoding, cb) {
     this.append(chunk);
 
     try {
