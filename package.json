@@ -1,6 +1,6 @@
 {
   "name": "biner",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "Declarative binary data encoder / decoder.",
   "main": "./index.js",
   "typings": "./index.d.ts",
