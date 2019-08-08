@@ -1,5 +1,5 @@
-import {expect} from "../support";
-import {LinkedList}  from '../../src/ll';
+import {expect} from "./support";
+import {LinkedList}  from '../src/ll';
 
 describe("LinkedList", () => {
 
