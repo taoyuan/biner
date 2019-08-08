@@ -1,5 +1,5 @@
 import {expect} from "./support";
-import {BufferList} from '../src/bl';
+import {BufferList} from '..';
 
 describe("BufferList", () => {
 
