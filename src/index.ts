@@ -1,4 +1,4 @@
-import {BinaryStream} from './binary-stream';
+import {BinaryStream} from './bs';
 import {array} from './types/array';
 import {buffer} from './types/buffer';
 import {bool} from './types/bool';
@@ -116,7 +116,9 @@ function createTransformDecode(schema?: Schema) {
 export * from './errors';
 export * from './binio';
 export * from './transaction';
-export * from './binary-stream';
+export * from './bl';
+export * from './ll';
+export * from './bs';
 
 export const createEncode = createEncodeStream;
 export const createDecode = createDecodeStream;

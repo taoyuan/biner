@@ -1,5 +1,5 @@
 import {isType, isUserType, isDecodeType} from './util';
-import {BinaryStream} from './binary-stream';
+import {BinaryStream} from './bs';
 import * as symbols from './internal/symbols';
 import {Metadata} from './internal/meta';
 import {BinReader} from "./binio";

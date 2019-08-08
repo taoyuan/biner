@@ -2,7 +2,7 @@ import {isUserType, isEncodeType, isType} from './util';
 
 import * as symbols from './internal/symbols';
 import {Metadata} from './internal/meta';
-import {BinaryStream} from './binary-stream';
+import {BinaryStream} from './bs';
 
 
 /**

@@ -1,4 +1,4 @@
-import {BinaryStream} from "./binary-stream";
+import {BinaryStream} from "./bs";
 import * as symbols from "./internal/symbols";
 
 export interface DataEncodeType {

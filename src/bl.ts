@@ -1,4 +1,4 @@
-import {LinkedList} from './linked-list';
+import {LinkedList} from './ll';
 
 /**
  * An optimised partial implementation of Buffer list from `bl`.

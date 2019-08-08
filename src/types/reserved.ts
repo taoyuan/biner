@@ -5,7 +5,7 @@ import {isType, isFunction} from '../util';
 import * as symbols from '../internal/symbols';
 import {Metadata} from '../internal/meta';
 import {Codec} from "../common";
-import {BinaryStream} from "../binary-stream";
+import {BinaryStream} from "../bs";
 
 /**
  * Type for reserved data.

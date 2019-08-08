@@ -1,4 +1,4 @@
-import {BinaryStream} from "../binary-stream";
+import {BinaryStream} from "../bs";
 import {Codec} from "../common";
 
 const {isType} = require('../util');

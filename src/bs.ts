@@ -1,5 +1,5 @@
 import {Transform} from 'stream';
-import {BufferList} from './internal/buffer-list';
+import {BufferList} from './bl';
 import {NotEnoughDataError} from './errors';
 import {BinReadWriter} from "./binio";
 

@@ -1,4 +1,4 @@
-import {BinaryStream} from "../binary-stream";
+import {BinaryStream} from "../bs";
 import {isType} from '../util';
 import {NotEnoughDataError} from '../errors';
 import {Codec} from "../common";

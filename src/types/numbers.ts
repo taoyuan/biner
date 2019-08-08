@@ -1,4 +1,4 @@
-import {BinaryStream} from "../binary-stream";
+import {BinaryStream} from "../bs";
 
 export const numbers = {
   doublebe: createFastStub(8, 'writeDoubleBE', 'readDoubleBE'),

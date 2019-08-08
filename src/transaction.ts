@@ -1,5 +1,5 @@
 import {NotEnoughDataError} from './errors';
-import {BinaryStream} from "./binary-stream";
+import {BinaryStream} from "./bs";
 import {BinReader} from "./binio";
 
 /**
